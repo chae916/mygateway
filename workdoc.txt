@@ -1,0 +1,76 @@
+* ubuntu 8.04 LTS 설치
+* intelliu IDEA community edition 설치
+*git 설치
+
+https://github.com/gogohs/my-product (이미지랑  json 파일 확인)
+
+git clone https://github.com/kimscott/my-order.git
+git clone https://github.com/kimscott/my-product.git
+
+
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+
+
+kubectl -n kafka exec -ti my-kafka-0 -- /usr/bin/kafka-console-consumer --bootstrap-server my-kafka:9092 --topic shop --from-beginning
+
+* 설계 (이미지 확인 github.com/gogohs
+*start.spring.io (dependency  추가)
+  h2, jpa, rest repository 추가
+- product
+* agrregate 선언
+  . product.java : entity 선언
+                     event 기능 기술 
+                     바인딩한 채널 기슬 (메시지 발송)
+  . ~repository.java (CRUD interface로 진행)
+  . event 는 java class로 생성 ( ~changed.java) --> json으로 변경됨
+  . 카프카 연결 (로컬에서)
+    . 주키퍼 위에서 뜸 (9092포트
+ . 카프가 이식 위해   pom.xml 에 카프카 라이브러리 추가, dependency, dependency management 기술
+   클리우드 버젼 매칭 (spring  사이트 확인(
+ .  application.yml 
+    카프카 주소 기입, 바인딩 기술, 보내는 토픽, 받는 토픽 기술)
+   consummer를 그룹으로 묶음 (destination 기술 (shop))
+ . demoapplicaiton.java (스트리밍 방식 바인드)
+ . kafkalisner (어떤일을 하겠다 기술 주요 기능)
+
+- order
+  . 기존 플젝 복사
+  .  pom.xml :  이름변경, 포트변경   
+  .  order/ orderrepository/orderplaced,java 등 만듬
+  .  받지 않을경우
+ .  demoapplicaiton.java (process를 source.class로 선언)  받은걸 안하겠다는 뜻
+  . orderplaced.java : 객체로 받음
+
+ 
+* github에 new repository  생성 및 연결
+1. github에 들어가서  new repository 생성
+2. 연결할 로컬 위치에 들어가서 아래 명령어 실행
+echo "# mygateway" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/chae916/mygateway.git
+git push -u origin master
+
+
+* 도커 파일. azure_pipline.yml 복사 및 설정
+* 서비스 그룹. 쿠버네티스 서비스. 레지스터리 만듬
+* 클러스터 연결 
+   az aks get  credential ~~
+  az aks get-credentials --resource-group [azure-resource-name] --name [azure-cluster-name]
+
+* ACR 붙이는 작업 (Azure AKS와 ACR 연결)
+   az update ~
+  az aks update -n [azure-cluster-name] -g [azure-resource-Group-name] --attach-acr [azure-acr-name]
+
+dev.azure.com
+* pipeline -> library에 생성 (공통된변수) (azure_pipeling.yml)
+  . pipeline 생성 > new pipeline > gitgub 선택
+* setting -> service connection 작업
+* pipline 생성 (order , product) -> bulid 진행
+. kubectl get pod  or kubectl get svc 등으로 확인
+* httpie 설치 
+  들어가서  order, product 호출 
+* kafka 설치 및 실행 
+  github.com/event-storming/docs 확인
+  (eventTopic명 바뀜)
